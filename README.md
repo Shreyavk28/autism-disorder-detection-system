@@ -10,7 +10,7 @@ A Flask-based web application that uses deep learning and computer vision techni
 - **Face Detection:** Uses MTCNN to detect faces in captured images.
 - **Face Verification:** Uses FaceNet to generate facial embeddings and cosine similarity to verify that the same person is captured throughout the session.
 - **ASD Image Classification:** Uses a trained MobileNetV2 model to generate a prediction probability from facial images.
-- **Capture Interval:** Enforces a 3-second delay between image captures.
+- **Capture Interval:** Enforces a 24 hr delay between image captures.
 - **Result Aggregation:** Calculates the mean prediction probability across the captured images to generate a final result.
 - **User Dashboard:** Displays previous captures, individual predictions, and the final aggregated result.
 
