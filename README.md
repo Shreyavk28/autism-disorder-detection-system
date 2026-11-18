@@ -1,81 +1,185 @@
-# Monitoring System for ASD
+# Autism Disorder Detection System Using Deep Learning
 
-A Flask-based web application for monitoring and detecting Autism Spectrum Disorder (ASD) using facial images. The system allows users to create a photo plan, capture images at set intervals, and uses deep learning models to predict the likelihood of ASD. It also ensures the same person is being captured throughout the session using facial recognition.
+A Flask-based web application that uses deep learning and computer vision techniques for experimental Autism Spectrum Disorder (ASD) image classification. The system captures multiple facial images, verifies facial identity across captures, and generates individual and aggregated predictions using a trained MobileNetV2 model.
 
 ## Features
 
-- **User Authentication:** Secure registration and login using secure password hashing.
-- **Photo Plan:** Users can set a customized plan of 1 to 10 photos to be taken for analysis.
-- **Face Detection & Verification:** Uses **MTCNN** for face detection and **FaceNet** to extract facial embeddings. This ensures that the same individual's face is captured consistently across the entire photo plan.
-- **ASD Prediction:** Utilizes a trained **MobileNetV2** model (`autism_mobilenetv2.h5`) to analyze facial features and predict the probability of ASD.
-- **Anti-Spam Delay:** Enforces a configurable delay (e.g., 3 seconds) between image captures to ensure proper intervals.
-- **Result Aggregation:** Computes the mean probability across all captures in a plan to provide a final aggregated result (Autistic / Non-Autistic).
-- **User Dashboard:** A gallery interface to view past captures, individual predictions, and the final aggregated result.
+- **User Authentication:** User registration and login with securely hashed passwords.
+- **Photo Plan:** Configure an image capture plan from 1 to 10 photos.
+- **Face Detection:** Uses MTCNN to detect faces in captured images.
+- **Face Verification:** Uses FaceNet to generate facial embeddings and cosine similarity to verify that the same person is captured throughout the session.
+- **ASD Image Classification:** Uses a trained MobileNetV2 model to generate a prediction probability from facial images.
+- **Capture Interval:** Enforces a 3-second delay between image captures.
+- **Result Aggregation:** Calculates the mean prediction probability across the captured images to generate a final result.
+- **User Dashboard:** Displays previous captures, individual predictions, and the final aggregated result.
 
-## Tech Stack
+## Technology Stack
 
-- **Backend:** Flask, Flask-SQLAlchemy, Flask-CORS
-- **Database:** SQLite (Default, configurable via `DATABASE_URL` environment variable)
-- **Machine Learning & Computer Vision:**
-  - TensorFlow / Keras (MobileNetV2 for ASD classification)
-  - OpenCV (`cv2`) for image processing
-  - MTCNN for robust face detection
-  - Keras-FaceNet for facial embeddings and cosine similarity matching
-- **Frontend:** HTML, CSS, JavaScript (served via Flask templates and static files)
+| Category | Technologies |
+|---|---|
+| Programming Language | Python |
+| Backend | Flask |
+| Frontend | HTML, CSS, JavaScript |
+| Deep Learning | TensorFlow, Keras, MobileNetV2 |
+| Face Detection | MTCNN |
+| Face Recognition | FaceNet |
+| Image Processing | OpenCV, NumPy |
+| Similarity Measurement | Scikit-learn, Cosine Similarity |
+| Database | SQLite |
+| ORM | Flask-SQLAlchemy |
 
 ## Project Structure
 
 ```text
-monitoring-system-ASD/
-├── app.py                     # Main Flask application and API routes
-├── autism_mobilenetv2.h5      # Pre-trained MobileNetV2 model for ASD prediction
-├── requirements.txt           # Python dependencies (make sure to install Flask, TensorFlow, OpenCV, etc.)
-├── static/                    # Static assets (CSS, JS, images)
-├── templates/                 # HTML templates for the frontend
-├── users/                     # Directory where user-captured images and embeddings are stored
-└── instance/                  # Directory containing the SQLite database
+autism-disorder-detection-system/
+│
+├── app.py
+├── autism_mobilenetv2.h5
+├── requirements.txt
+├── .gitignore
+│
+├── static/
+│   ├── css/
+│   │   └── style.css
+│   └── js/
+│       └── main.js
+│
+├── templates/
+│   └── index.html
+│
+├── users/                 # Captured user images
+│
+└── instance/              # SQLite database
 ```
 
-## Setup and Installation
+## How It Works
 
-1. **Clone the repository:**
-   ```bash
-   git clone <repository_url>
-   cd "folder name"
-   ```
+1. **User Login:** Users register or log in to access the application.
+2. **Photo Plan Creation:** Users select the number of images to capture, from 1 to 10.
+3. **Face Detection:** MTCNN detects and extracts the face from each captured image.
+4. **Face Verification:** FaceNet generates facial embeddings. Cosine similarity is used to check whether the captured face matches the first image.
+5. **Image Classification:** The detected face is processed and passed to the trained MobileNetV2 model.
+6. **Prediction Aggregation:** The application calculates the mean prediction probability across all captures.
+7. **Final Result:** The aggregated probability is used to display the final classification.
 
-2. **Create a virtual environment (optional but recommended):**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+### Prediction Logic
 
-3. **Install dependencies:**
-   Make sure you have all required packages installed. You may need to ensure `flask`, `tensorflow`, `opencv-python`, `mtcnn`, `keras-facenet`, and `scikit-learn` are available.
-   ```bash
-   pip install -r requirements.txt
-   pip install flask flask_sqlalchemy flask_cors werkzeug mtcnn keras-facenet
-   ```
+The application uses a probability threshold of 0.50:
 
-4. **Run the application:**
-   ```bash
-   python app.py
-   ```
-   The application will be accessible at `http://localhost:5000` (or `http://0.0.0.0:5000` depending on your environment).
+- Probability greater than 0.50 → Autistic
+- Probability less than or equal to 0.50 → Non-Autistic
 
-## How to Use
+This class mapping assumes that the model was trained with the Autistic class encoded as the positive class (1).
 
-1. **Register/Login:** Create a new account or log into an existing one.
-2. **Set Photo Plan:** Choose how many photos (1-10) you want to capture for the analysis.
-3. **Capture Images:** Use your webcam/camera through the user interface to take photos. The system will verify if the face matches the first captured image.
-4. **View Results:** After completing the required number of photos, the system will calculate and display your final aggregated result based on all captures.
+## Installation and Setup
 
-## Environment Variables
+### 1. Clone the Repository
 
-- `FLASK_SECRET_KEY`: Set this to a secure random string for production to secure sessions.
-- `DATABASE_URL`: Set this to use a different database (defaults to `sqlite:///users.sqlite3`).
+```bash
+git clone https://github.com/YOUR_USERNAME/autism-disorder-detection-system.git
+```
 
-## Notes
+```bash
+cd autism-disorder-detection-system
+```
 
-- The system relies on the pre-trained `autism_mobilenetv2.h5` model file. Ensure this file is present in the root directory before running the application.
-- The default face matching threshold is set to `0.55`, and the ASD probability threshold is `0.50`. These can be adjusted in `app.py`.
+### 2. Create a Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+Activate it on Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+On Linux/macOS:
+
+```bash
+source venv/bin/activate
+```
+
+### 3. Install Dependencies
+
+```bash
+python -m pip install --upgrade pip
+```
+
+Install the required application packages:
+
+```bash
+pip install Flask Flask-SQLAlchemy Flask-CORS Werkzeug python-dotenv
+pip install tensorflow opencv-python numpy
+pip install mtcnn keras-facenet scikit-learn
+```
+
+**Note:** TensorFlow, OpenCV, NumPy, and MTCNN versions must be compatible with your Python environment. The commands above install packages but do not guarantee compatibility with every operating system.
+
+### 4. Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+FLASK_SECRET_KEY=replace_with_a_secure_random_secret
+DATABASE_URL=sqlite:///users.sqlite3
+```
+
+Keep `.env` private and do not upload it to GitHub.
+
+### 5. Run the Application
+
+```bash
+python app.py
+```
+
+Open the application in your browser:
+
+```text
+http://127.0.0.1:5000
+```
+
+## Model Information
+
+The project uses the trained model:
+
+`autism_mobilenetv2.h5`
+
+- **Architecture:** MobileNetV2
+- **Input Image Size:** 224 × 224 pixels
+- **Output:** Binary classification probability
+- **Classification Threshold:** 0.50
+
+The model file must be present in the project root directory for predictions to work.
+
+## Configuration
+
+The following settings are defined in `app.py`:
+
+| Parameter | Default Value | Purpose |
+|---|---:|---|
+| `FACE_MATCH_THRESHOLD` | 0.55 | Face similarity threshold |
+| `ASD_THRESHOLD` | 0.50 | Classification threshold |
+| `CAPTURE_DELAY` | 3 seconds | Delay between image captures |
+| `IMG_W` | 224 | Model input width |
+| `IMG_H` | 224 | Model input height |
+
+## Future Improvements
+
+- Improve model evaluation using independent test datasets.
+- Add more detailed prediction history and reporting.
+- Improve the user dashboard and visualization.
+- Add additional model performance metrics.
+- Improve application deployment and security.
+
+## Disclaimer
+
+This project is developed for academic and educational purposes. Its image-based predictions are experimental and are not a clinically validated method for diagnosing Autism Spectrum Disorder. The results should not be used as a substitute for professional medical assessment.
+
+## Author
+
+**Shreya V K**
+
+- GitHub: [Shreyavk28](https://github.com/Shreyavk28)
+- LinkedIn: [Shreya VK](https://linkedin.com/in/shreya-vk-softwareengineer)
