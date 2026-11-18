@@ -162,7 +162,7 @@ The following settings are defined in `app.py`:
 |---|---:|---|
 | `FACE_MATCH_THRESHOLD` | 0.55 | Face similarity threshold |
 | `ASD_THRESHOLD` | 0.50 | Classification threshold |
-| `CAPTURE_DELAY` | 3 seconds | Delay between image captures |
+| `CAPTURE_DELAY` | 24 Hours | Delay between image captures |
 | `IMG_W` | 224 | Model input width |
 | `IMG_H` | 224 | Model input height |
 
