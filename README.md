@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Autism Disorder Detection System Using Deep Learning
+=======
+# Autism Disorder Detection System
+>>>>>>> 958a232ffec1b980331256adbcc91d4b7067aea5
 
 A Flask-based web application that uses deep learning and computer vision techniques for experimental Autism Spectrum Disorder (ASD) image classification. The system captures multiple facial images, verifies facial identity across captures, and generates individual and aggregated predictions using a trained MobileNetV2 model.
 
