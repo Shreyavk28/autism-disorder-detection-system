@@ -1,4 +1,4 @@
-# Monitoring System for ASD
+# Autism Disorder Detection System
 
 A Flask-based web application for monitoring and detecting Autism Spectrum Disorder (ASD) using facial images. The system allows users to create a photo plan, capture images at set intervals, and uses deep learning models to predict the likelihood of ASD. It also ensures the same person is being captured throughout the session using facial recognition.
 
